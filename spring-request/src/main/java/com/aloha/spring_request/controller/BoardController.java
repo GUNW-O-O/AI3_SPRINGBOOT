@@ -84,6 +84,10 @@ public class BoardController {
      * - response : 
      * ✅ 요청 성공 : 200 OK            "SUCCESS"  
      * ❌ 요청 실패 : 400 Bad Request   "FAIL"
+     * consumes : Content-Type
+     *          - application/json                  : @RequestBody Board board
+     *          - multipart/form-data               : Board board
+     *            application/x-www-form-urlencoded
      * @param board
      * @return
      * @throws Exception
