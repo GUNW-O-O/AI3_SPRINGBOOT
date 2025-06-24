@@ -42,7 +42,7 @@ public class PostController {
                                              .queryParam("size", pagination.getSize())
                                              .queryParam("count", pagination.getCount())
                                              .build()
-                                             .toString();
+                                             .toUriString();
             model.addAttribute("pageUri", pageUri);
         return "posts/list";
     }
