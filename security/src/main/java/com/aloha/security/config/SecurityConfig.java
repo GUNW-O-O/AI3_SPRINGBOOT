@@ -90,7 +90,18 @@ public class SecurityConfig {
                 .tokenRepository(tokenRepository())
                 .tokenValiditySeconds(60 * 60 * 24 * 7));
 
-        return http.build();
+                
+                // 🔓 로그아웃 설정
+            http.logout(logout -> logout
+                        .logoutUrl("/logout")   // 로그아웃 요청 경로
+                        .logoutSuccessUrl("/login?logout=true") // 로그아웃 성공시 URL
+                        .invalidateHttpSession(true)       // 세션 초기화
+                        .deleteCookies("remember-id")      // 로그아웃 시, 아이디 저장쿠키 삭제
+                        // .logoutSuccessHandler(null)         // 로그아웃 성공 핸들러 설정
+                        );
+                
+            return http.build();
+
     }
 
     // PersistentRepository 토큰정보 객체 - 빈 등록
