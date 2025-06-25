@@ -13,7 +13,7 @@ import lombok.ToString;
 @Getter
 @ToString
 public class CustomUser implements UserDetails {
-    
+
     // 사용자 DTO
     private Users user;
 
@@ -22,26 +22,25 @@ public class CustomUser implements UserDetails {
     }
 
     /**
-     * 🔒 권한 정보 메소드
+     * 🔐 권한 정보 메소드
      * ✅ UserDetails 를 CustomUser 로 구현하여,
      *    Spring Security 의 User 대신 사용자 정의 인증 객체(CustomUser)로 적용
-     * ⚠️ CustomUser 적용 시, 권한을 사용할 때는 'ROLE_' 붙여서 사용해야한다.
+     * ⚠ CustomUser 적용 시, 권한을 사용할 때는 'ROLE_' 붙여서 사용해야한다.
      */
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // List<UserAuth>authList = user.getAuthList();
+        // List<UserAuth> authList = user.getAuthList();
         // List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-        // for ( UserAuth userAuth : authList ) {
+        // for (UserAuth userAuth : authList) {
         //     String auth = userAuth.getAuth();
-        //     authorities.add(new SimpleGrantedAuthority(auth));
+        //     authorities.add( new SimpleGrantedAuthority(auth) );
         // }
         // return authorities;
 
         return user.getAuthList().stream()
-                                .map((auth) -> new SimpleGrantedAuthority(auth.getAuth()))
-                                .collect(Collectors.toList());
+                                 .map( (auth) -> new SimpleGrantedAuthority(auth.getAuth() ))
+                                 .collect(Collectors.toList());
     }
-
 
     @Override
     public String getPassword() {
@@ -58,5 +57,6 @@ public class CustomUser implements UserDetails {
         return user.getEnabled() == 1 ? true : false;
     }
 
+    
     
 }

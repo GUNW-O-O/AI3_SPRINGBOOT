@@ -1,6 +1,5 @@
 package com.aloha.security.controller;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
@@ -32,53 +31,50 @@ public class HomeController {
     // public String home(Principal principal, Model model) throws Exception {
     // public String home(Authentication authentication, Model model) throws Exception {
     public String home(@AuthenticationPrincipal CustomUser authUser, Model model) throws Exception {
-        log.info(":::::::: 메인 화면 ::::::::");
+        log.info(":::::::::: 메인 화면 ::::::::::");
 
-        // if(principal != null) {
-        //     String username = principal.getName();      // 인증된 사용자 아이디
+        // if( principal != null ) {
+        //     String username = principal.getName();              // 인증된 사용자 아이디
         //     log.info("username : {}", username);
-        //     Users user = userService.select(username);  // 사용자 정보 조회
+        //     Users user = userService.select(username);          // 사용자 정보 조회
         //     log.info("user : {}", user);
-        //     model.addAttribute("user", user);   // 사용자 정보 모델에 등록
+        //     model.addAttribute("user", user);     // 사용자 정보 모델에 등록
         // }
-        
-        // if(authentication != null) {
+
+        // if( authentication != null ) {
         //     User user = (User) authentication.getPrincipal();
-        //     String username = user.getUsername();      // 인증된 사용자 아이디
-        //     String password = user.getPassword();      // 인증된 사용자 비밀번호
+        //     String username = user.getUsername();              // 인증된 사용자 아이디
+        //     String password = user.getPassword();              // 인증된 사용자 비밀번호
         //     Collection<GrantedAuthority> authList = user.getAuthorities();  // 사용자 권한
         //     log.info("username : {}", username);
         //     log.info("password : {}", password);
         //     log.info("authList : {}", authList);
-
-        //     Users joinedUser = userService.select(username);        // 사용자 정보 등록
+        //     Users joinedUser = userService.select(username);          // 사용자 정보 조회
         //     log.info("joinedUser : {}", joinedUser);
-        //     model.addAttribute("user", user);   // 사용자 정보 모델에 등록
+        //     model.addAttribute("joinedUser", joinedUser);     // 사용자 정보 모델에 등록
         // }
 
-        if( authUser != null) {
+        if( authUser != null ) {
             log.info("authUser : {}", authUser);
             Users user = authUser.getUser();
-            model.addAttribute("user",user);
+            model.addAttribute("user", user);
         }
 
         return "index";
     }
     
 
+
+    /**
+     * 회원 가입 화면
+     * @return
+     */
     @GetMapping("/join")
     public String join() {
         return "join";
     }
-    
+
     /**
-     * 회원 가입 화면
-     * @param user
-     * @param request 
-     * @return
-     * @throws Exception
-     */
-   /**
      * 회원 가입 처리
      * @param user
      * @return
@@ -86,26 +82,27 @@ public class HomeController {
      */
     @PostMapping("/join")
     public String joinPost(Users user, HttpServletRequest request) throws Exception {
-        // 암호화 전 비밀 번호 
+        // 암호화 전 비밀 번호
         String plainPassword = user.getPassword();
         // 회원 가입 요청
         int result = userService.join(user);
-        // 회원가입 성공 시, 바로 로그인 🔒
+        // 회원 가입 성공 시, 바로 로그인 ⚡🔐
         boolean loginResult = false;
         if( result > 0 ) {
             // 암호화 전 비밀번호로 다시 세팅
             user.setPassword(plainPassword);
-            loginResult = userService.login(user, request); // 바로 로그인 
+            loginResult = userService.login(user, request);  // ⚡🔐 바로 로그인
         }
-        if ( loginResult )
-            // 메인 화면으로 이동 
+        if(loginResult)
+            // 메인 화면으로 이동   
             return "redirect:/";
-        if ( result > 0 )
-            // 로그인 화면으로 이동 
+        if(result > 0)
+            // 로그인 화면으로 이동
             return "redirect:/login";
         return "redirect:/join?error=true";
     }
     
+
     /**
      * 로그인 화면
      * @return
@@ -115,13 +112,12 @@ public class HomeController {
         @CookieValue(value = "remember-id", required = false) Cookie cookie,
         Model model
     ) {
-        log.info("::::::: 로그인 페이지 :::::::");
+        log.info(":::::::::: 로그인 페이지 ::::::::::");
         String username = "";
         boolean rememberId = false;
-
         if( cookie != null ) {
-            log.info("CookieName : {}" + cookie.getName());
-            log.info("CookieValue : {}" + cookie.getValue());
+            log.info("CookieName : " + cookie.getName());
+            log.info("CookieValue : " + cookie.getValue());
             username = cookie.getValue();
             rememberId = true;
         }
@@ -130,5 +126,6 @@ public class HomeController {
         return "login";
     }
     
-
+    
+    
 }
