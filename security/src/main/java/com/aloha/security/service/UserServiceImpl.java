@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.User;
@@ -18,7 +19,7 @@ import com.aloha.security.mapper.UserMapper;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
 
-@Service
+@Service("UserService")
 public class UserServiceImpl implements UserService {
 
     @Autowired UserMapper userMapper;
@@ -90,6 +91,16 @@ public class UserServiceImpl implements UserService {
     public Users select(String username) throws Exception {
         Users user = userMapper.select(username);
         return user;
+    }
+
+    @Override
+    public boolean isAdmin() throws Exception {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        if( auth == null || !auth.isAuthenticated() ) return false;
+
+        return auth.getAuthorities().stream()
+                                    .map(GrantedAuthority::getAuthority)
+                                    .anyMatch(role -> role.equals("ROLE_ADMIN"));
     }
     
 }

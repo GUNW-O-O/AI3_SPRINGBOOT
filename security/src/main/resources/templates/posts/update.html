@@ -15,7 +15,7 @@
             <h1 class="display-5 fw-bold text-body-emphasis">게시글 수정</h1>
         </div>
         <div class="card p-4 shadow">
-            <form id="form" action="/posts/update" class="post" th:object="${post}">
+            <form id="form" action="/posts/update" method="post" th:object="${post}">
                 <!-- CSRF TOKEN -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <input type="hidden" th:field="*{id}">
@@ -31,10 +31,13 @@
                 </div>
     
                 <div class="d-grid gap-2">
-                    <button type="submit" class="btn btn-lg btn-primary">수정</button>        
+                    <!-- 👨‍✈️ 관리자 or 👩‍💻 작성자 -->
+                    <th:block th:if="${@UserService.isAdmin() or @PostService.isOwner( post.id, #authentication.principal.user.no)} ">
+                        <button type="submit" class="btn btn-lg btn-primary">수정</button>        
+                        <button type="button" class="btn btn-lg btn-danger"
+                        onclick="remove()">삭제</button>        
+                    </th:block>
                     <a href="/posts/list" class="btn btn-lg btn-success">목록</a>
-                    <button type="button" class="btn btn-lg btn-danger"
-                                        onclick="remove()">삭제</button>        
                 </div>
             </form>
         </div>

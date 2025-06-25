@@ -24,6 +24,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="list" resultMap="PostMap">
         SELECT *
         FROM posts
+        ORDER BY no DESC
     </select>
 
     <!-- 페이징 목록 -->
@@ -31,6 +32,7 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <select id="page" resultMap="PostMap">
         SELECT *
         FROM posts
+        ORDER BY no DESC
         LIMIT #{index}, #{size}
     </select>
 
@@ -50,8 +52,8 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 
     <!-- 등록 -->
     <insert id="insert">
-        INSERT INTO posts ( id, title, writer, content )
-        VALUES ( #{id}, #{title}, #{writer}, #{content} )
+        INSERT INTO posts ( id, title, user_no, content )
+        VALUES ( #{id}, #{title}, #{userNo}, #{content} )
     </insert>
 
     <!-- 수정 -->
@@ -67,7 +69,6 @@ PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
     <update id="updateById">
         UPDATE posts
            SET title = #{title}
-              ,writer = #{writer}
               ,content = #{content}
         WHERE id = #{id}
     </update>

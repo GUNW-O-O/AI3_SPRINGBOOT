@@ -20,5 +20,8 @@ public interface UserService {
 
     // 회원 조회
     public Users select(String username) throws Exception;
+
+    // 👨‍✈️ 관리자 확인
+    public boolean isAdmin() throws Exception;
     
 }

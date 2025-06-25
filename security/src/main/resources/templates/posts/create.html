@@ -15,7 +15,7 @@
             <h1 class="display-5 fw-bold text-body-emphasis">게시글 등록</h1>
         </div>
         <div class="card p-4 shadow">
-            <form action="/posts/create" class="post" th:object="${post}">
+            <form action="/posts/create" method="post" th:object="${post}">
                 <!-- CSRF TOKEN -->
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     
