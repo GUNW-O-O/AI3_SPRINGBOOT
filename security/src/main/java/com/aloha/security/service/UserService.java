@@ -1,7 +1,10 @@
 package com.aloha.security.service;
 
+
 import com.aloha.security.domain.UserAuth;
 import com.aloha.security.domain.Users;
+
+import jakarta.servlet.http.HttpServletRequest;
 
 public interface UserService {
     
@@ -9,5 +12,10 @@ public interface UserService {
     public int join(Users user) throws Exception;
     // 회원 권한 등록
     public int insertAuth(UserAuth userAuth) throws Exception;
+
+    public boolean login(Users user, HttpServletRequest request);
+
+    // 회원 조회
+    public Users select(String username) throws Exception;
 
 }

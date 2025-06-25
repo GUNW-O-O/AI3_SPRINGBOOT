@@ -9,11 +9,11 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.rememberme.JdbcTokenRepositoryImpl;
 import org.springframework.security.web.authentication.rememberme.PersistentTokenRepository;
+
+import com.aloha.security.service.UserDetailServiceImpl;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +28,8 @@ public class SecurityConfig {
     // @Autowired 
     // private PasswordEncoder passwordEncoder;
 
+    @Autowired
+    private UserDetailServiceImpl userDetailServiceImpl;
 
     // 🔐 스프링 시큐리티 설정 메소드
 	@Bean
@@ -45,6 +47,9 @@ public class SecurityConfig {
 
         // 🔐 폼 로그인
         http.formLogin(login -> login.permitAll());
+
+        // 😎 사용자 정의 인증
+        http.userDetailsService(userDetailServiceImpl);
 
         // 🔄 자동 로그인
         http.rememberMe(me -> me
@@ -99,25 +104,25 @@ public class SecurityConfig {
      * 🍃 JDBC 인증 방식 빈 등록
      * @return
      */
-    @Bean
-    public UserDetailsService userDetailsService() {
-        JdbcUserDetailsManager userDetailsManager 
-                = new JdbcUserDetailsManager(dataSource);
+    // @Bean
+    // public UserDetailsService userDetailsService() {
+    //     JdbcUserDetailsManager userDetailsManager 
+    //             = new JdbcUserDetailsManager(dataSource);
 
-        // 사용자 인증 쿼리
-        String sql1 = " SELECT username, password, enabled "
-                    + " FROM user "
-                    + " WHERE username = ? "
-                    ;
-        // 사용자 권한 쿼리
-        String sql2 = " SELECT username, auth "
-                    + " FROM user_auth "
-                    + " WHERE username = ? "
-                    ;
-        userDetailsManager.setUsersByUsernameQuery(sql1);
-        userDetailsManager.setAuthoritiesByUsernameQuery(sql2);
-        return userDetailsManager;
-    }
+    //     // 사용자 인증 쿼리
+    //     String sql1 = " SELECT username, password, enabled "
+    //                 + " FROM user "
+    //                 + " WHERE username = ? "
+    //                 ;
+    //     // 사용자 권한 쿼리
+    //     String sql2 = " SELECT username, auth "
+    //                 + " FROM user_auth "
+    //                 + " WHERE username = ? "
+    //                 ;
+    //     userDetailsManager.setUsersByUsernameQuery(sql1);
+    //     userDetailsManager.setAuthoritiesByUsernameQuery(sql2);
+    //     return userDetailsManager;
+    // }
 
 
     /**
