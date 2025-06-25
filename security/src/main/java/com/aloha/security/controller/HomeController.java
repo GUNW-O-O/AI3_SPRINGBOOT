@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CookieValue;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
@@ -12,8 +13,11 @@ import com.aloha.security.domain.CustomUser;
 import com.aloha.security.domain.Users;
 import com.aloha.security.service.UserService;
 
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 
@@ -100,6 +104,30 @@ public class HomeController {
             // 로그인 화면으로 이동 
             return "redirect:/login";
         return "redirect:/join?error=true";
+    }
+    
+    /**
+     * 로그인 화면
+     * @return
+     */
+    @GetMapping("/login")
+    public String login(
+        @CookieValue(value = "remember-id", required = false) Cookie cookie,
+        Model model
+    ) {
+        log.info("::::::: 로그인 페이지 :::::::");
+        String username = "";
+        boolean rememberId = false;
+
+        if( cookie != null ) {
+            log.info("CookieName : {}" + cookie.getName());
+            log.info("CookieValue : {}" + cookie.getValue());
+            username = cookie.getValue();
+            rememberId = true;
+        }
+        model.addAttribute("username", username);
+        model.addAttribute("rememberId", rememberId);
+        return "login";
     }
     
 
